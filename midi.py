@@ -8,10 +8,12 @@ duration = 1  # beats
 tempo = 120
 volume = 100
 
+note_numbers = [] # get from notes.py
+
 MyMIDI = MIDIFile(1)  # One track
 MyMIDI.addTempo(track, time, tempo)
 
-for i, pitch in enumerate(array_of_note_numbers): # create nested list
+for i, pitch in enumerate(note_numbers): # create nested list
     MyMIDI.addNote(track, channel, pitch, time + i, duration, volume)
 
 with open("file", "wb") as output_file:
