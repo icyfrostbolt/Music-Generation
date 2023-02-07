@@ -26,10 +26,6 @@ def add_note_to_dict(note, time, duration):
         if duration >= longest_duration:
             longest_duration = duration
 
-add_note_to_dict(note_numbers["Fmaj"],0,1)
-add_note_to_dict(note_numbers["Gmaj"],5,15)
-add_note_to_dict(note_numbers["Amin7"],21,15)
-
 MyMIDI = MIDIFile(1)  # One track
 MyMIDI.addTempo(track, time, tempo)
 

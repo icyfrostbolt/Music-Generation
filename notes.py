@@ -14,7 +14,7 @@ def note_num_conversion(note):
     return note
 
 def note_caller():
-    chord_names = ["Cmaj7","Fmaj","Gmaj","Amin7"]
+    chord_names = ["Amin","Amaj","Bmin","Bmaj","Cmin","Cmaj","Dmin","Dmaj","Emin","Emaj","Fmin","Fmaj","Gmin","Gmaj","Abmin","Abmaj","Bbmin","Bbmaj","Dbmin","Dbmaj","Ebmin","Ebmaj","Gbmin","Gbmaj"]
     chord_dict = {}
 
     for chord in chord_names:
