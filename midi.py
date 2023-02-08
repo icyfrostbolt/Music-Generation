@@ -41,7 +41,7 @@ def open_song(name):
 
 track_num = 0
 directory = os.getcwd()
-directory = os.path.join(directory, "Track")
+directory = os.path.join(directory, "CSV")
 for item in sorted(os.listdir(directory)):
     track_num += 1
 
@@ -58,7 +58,7 @@ for number in range(track_num):
     # row 4 = duration
 
     MyMIDI = MIDIFile(track_num)  # One track
-    MyMIDI.addTempo(track_num, time, tempo)
+    MyMIDI.addTempo(number, time, tempo)
 
     while True:
         if max+longest_duration <= time:
@@ -66,10 +66,10 @@ for number in range(track_num):
         if time in note_time_dict:
             for item in note_time_dict.get(time):
                 for note_pitch in item.pitch:
-                    MyMIDI.addNote(track_num, channel, note_pitch, time, duration, volume)
+                    MyMIDI.addNote(number, channel, note_pitch, time, duration, volume)
         time += 1
 
-    if os.path.exists(f"Track{track_num}.midi"):
-        os.remove(f"Track{track_num}.midi")
-    with open(f"Track{track_num}.midi", "wb") as output_file:
+    if os.path.exists(f"Track{number}.midi"):
+        os.remove(f"Track{number}.midi")
+    with open(f"Track/Track{number}.midi", "wb") as output_file:
         MyMIDI.writeFile(output_file)
