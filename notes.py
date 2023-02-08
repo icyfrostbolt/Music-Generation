@@ -28,12 +28,11 @@ def note_caller():
         chord_dict[chord] = Chord(get_chord_name(chord))
         for note in chord_dict[chord].notes:
             chord_dict[chord].pitch.append(note_num_conversion(note))
-    print(chord_dict)
     return chord_dict
 
 def single_notes(note_names):
     note_pitch = {}
     for note_name in note_names:
         note_pitch[note_name] = Chord(note_name)
-        note_pitch[note_name].pitch = notes.note_to_int(note_name)
+        note_pitch[note_name].pitch.append(notes.note_to_int(note_name))
     return note_pitch
