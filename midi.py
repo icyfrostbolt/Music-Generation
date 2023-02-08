@@ -26,6 +26,19 @@ def add_note_to_dict(note, time, duration):
         if duration >= longest_duration:
             longest_duration = duration
 
+def open_song(name):
+    notes = []
+    song = open(name)
+    song.readline()
+    for data in song:
+        notes.append(data.split(","))
+    return notes
+
+# add the notes to the song
+note_data = open_song("song.csv")
+for item in note_data:
+    add_note_to_dict(note_numbers[item[0]],int(item[1]),int(item[2]))
+
 MyMIDI = MIDIFile(1)  # One track
 MyMIDI.addTempo(track, time, tempo)
 
@@ -34,6 +47,7 @@ while True:
         break
     if time in note_time_dict:
         for item in note_time_dict.get(time):
+            print(note_time_dict)
             for note_pitch in item.pitch:
                 MyMIDI.addNote(track, channel, note_pitch, time, duration, volume)
     time += 1
