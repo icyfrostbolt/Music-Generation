@@ -2,7 +2,6 @@ from mingus.containers import Note
 from midiutil import MIDIFile
 import notes, os
 
-track = 0
 channel = 0
 time = 0  # beats
 duration = 4  # beats
@@ -44,19 +43,26 @@ for item in note_data:
 # row 3 = start time
 # row 4 = duration
 
-MyMIDI = MIDIFile(1)  # One track
-MyMIDI.addTempo(track, time, tempo)
+track_num = 0
+directory = os.getcwd()
+directory = os.path.join(directory, "Track")
+for item in sorted(os.listdir(directory)):
+    track_num += 1
 
-while True:
-    if max+longest_duration <= time:
-        break
-    if time in note_time_dict:
-        for item in note_time_dict.get(time):
-            for note_pitch in item.pitch:
-                MyMIDI.addNote(track, channel, note_pitch, time, duration, volume)
-    time += 1
+for number in range(track_num):
+    MyMIDI = MIDIFile(track_num)  # One track
+    MyMIDI.addTempo(track_num, time, tempo)
 
-if os.path.exists("Track.midi"):
-  os.remove("Track.midi")
-with open("Track.midi", "wb") as output_file:
-    MyMIDI.writeFile(output_file)
+    while True:
+        if max+longest_duration <= time:
+            break
+        if time in note_time_dict:
+            for item in note_time_dict.get(time):
+                for note_pitch in item.pitch:
+                    MyMIDI.addNote(track_num, channel, note_pitch, time, duration, volume)
+        time += 1
+
+    if os.path.exists(f"Track{track_num}.midi"):
+        os.remove(f"Track{track_num}.midi")
+    with open(f"Track{track_num}.midi", "wb") as output_file:
+        MyMIDI.writeFile(output_file)
