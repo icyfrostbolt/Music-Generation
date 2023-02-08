@@ -33,10 +33,6 @@ def open_song(name):
         notes.append(data.split(","))
     return notes
 
-# add the notes to the song
-note_data = open_song("song.csv")
-for item in note_data:
-    add_note_to_dict(note_numbers[item[0]+item[1]],int(item[2]),int(item[3]))
 
 # row 1 = note
 # row 2 = octave
@@ -49,7 +45,18 @@ directory = os.path.join(directory, "Track")
 for item in sorted(os.listdir(directory)):
     track_num += 1
 
+note_data = []
 for number in range(track_num):
+    # add the notes to the song
+    note_data.append(open_song(f"CSV/song{number}.csv"))
+    for item in note_data[-1]:
+        add_note_to_dict(note_numbers[item[0]+item[1]],int(item[2]),int(item[3]))
+    
+    # row 1 = note
+    # row 2 = octave
+    # row 3 = start time
+    # row 4 = duration
+
     MyMIDI = MIDIFile(track_num)  # One track
     MyMIDI.addTempo(track_num, time, tempo)
 
