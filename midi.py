@@ -37,7 +37,12 @@ def open_song(name):
 # add the notes to the song
 note_data = open_song("song.csv")
 for item in note_data:
-    add_note_to_dict(note_numbers[item[0]],int(item[1]),int(item[2]))
+    add_note_to_dict(note_numbers[item[0]+item[1]],int(item[2]),int(item[3]))
+
+# row 1 = note
+# row 2 = octave
+# row 3 = start time
+# row 4 = duration
 
 MyMIDI = MIDIFile(1)  # One track
 MyMIDI.addTempo(track, time, tempo)
@@ -47,7 +52,6 @@ while True:
         break
     if time in note_time_dict:
         for item in note_time_dict.get(time):
-            print(note_time_dict)
             for note_pitch in item.pitch:
                 MyMIDI.addNote(track, channel, note_pitch, time, duration, volume)
     time += 1
