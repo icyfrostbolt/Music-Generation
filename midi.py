@@ -1,6 +1,6 @@
 from mingus.containers import Note
 from midiutil import MIDIFile
-import notes, os
+import notes, os, parse_inst
 
 channel = 0
 time = 0  # beats
@@ -12,6 +12,7 @@ longest_duration = 0
 
 note_numbers = notes.note_caller()
 note_time_dict = {}
+inst_dict = parse_inst.get_instrument_codes()
 
 def add_note_to_dict(note, time, duration):
     global max, longest_duration
@@ -33,12 +34,6 @@ def open_song(name):
         notes.append(data.split(","))
     return notes
 
-
-# row 1 = note
-# row 2 = octave
-# row 3 = start time
-# row 4 = duration
-
 track_num = 0
 directory = os.getcwd()
 directory = os.path.join(directory, "CSV")
@@ -57,8 +52,9 @@ for number in range(track_num):
     # row 3 = start time
     # row 4 = duration
 
-    MyMIDI = MIDIFile(track_num)  # One track
+    MyMIDI = MIDIFile(track_num)
     MyMIDI.addTempo(number, time, tempo)
+    MyMIDI.addProgramChange(number, channel, 0, inst_dict["Bird tweet"])
 
     while True:
         if max+longest_duration <= time:
