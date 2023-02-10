@@ -11,7 +11,6 @@ max = 0
 longest_duration = 0
 
 note_numbers = notes.note_caller()
-note_time_dict = {}
 inst_dict = parse_inst.get_instrument_codes()
 
 def add_note_to_dict(note, time, duration):
@@ -42,6 +41,7 @@ for item in sorted(os.listdir(directory)):
 
 note_data = []
 for number in range(track_num):
+    note_time_dict = {}
     # add the notes to the song
     note_data.append(open_song(f"CSV/song{number}.csv"))
     for item in note_data[-1]:
@@ -54,7 +54,7 @@ for number in range(track_num):
 
     MyMIDI = MIDIFile(track_num)
     MyMIDI.addTempo(number, time, tempo)
-    MyMIDI.addProgramChange(number, channel, 0, inst_dict["Bird tweet"])
+    MyMIDI.addProgramChange(number, channel, 0, inst_dict["Acoustic grand piano"])
 
     while True:
         if max+longest_duration <= time:
@@ -65,7 +65,7 @@ for number in range(track_num):
                     MyMIDI.addNote(number, channel, note_pitch, time, duration, volume)
         time += 1
 
-    if os.path.exists(f"Track{number}.midi"):
-        os.remove(f"Track{number}.midi")
-    with open(f"Track/Track{number}.midi", "wb") as output_file:
-        MyMIDI.writeFile(output_file)
+if os.path.exists(f"Track/Track.midi"):
+    os.remove(f"Track/Track.midi")
+with open(f"Track/Track.midi", "wb") as output_file:
+    MyMIDI.writeFile(output_file)

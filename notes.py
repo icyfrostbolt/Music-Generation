@@ -20,7 +20,7 @@ def note_caller():
     "Emin","Emaj","Fmin","Fmaj","Gmin","Gmaj","Abmin","Abmaj","Bbmin","Bbmaj",
     "Dbmin","Dbmaj","Ebmin","Ebmaj","Gbmin","Gbmaj"]
 
-    note_names = ["A","B","C"," D","E","F","G","Ab","Bb","Db","Eb","Gb"]
+    note_names = ["A","B","C","D","E","F","G","Ab","Bb","Db","Eb","Gb"]
     note_dict = single_notes(note_names)
     chord_dict.update(note_dict)
 
