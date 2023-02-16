@@ -4,9 +4,9 @@ import notes, os, parse_inst
 
 channel = 0
 time = 0  # beats
-duration = 4  # beats
-tempo = 120
-volume = 100
+duration = 1 # beast
+tempo = int(input("Tempo? (BPM):"))
+volume = int(input("Volume? (0-127): "))
 max = 0
 longest_duration = 0
 
@@ -43,7 +43,7 @@ note_data = []
 for number in range(track_num):
     note_time_dict = {}
     # add the notes to the song
-    note_data.append(open_song(f"CSV/song{number}.csv"))
+    note_data.append(open_song(os.path.join(directory, f"song{number}.csv")))
     for item in note_data[-1]:
         add_note_to_dict(note_numbers[item[0]+item[1]],int(item[2]),int(item[3]))
     
