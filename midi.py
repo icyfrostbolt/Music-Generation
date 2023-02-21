@@ -14,6 +14,7 @@ note_numbers = notes.note_caller()
 inst_dict = parse_inst.get_instrument_codes()
 
 def add_note_to_dict(note, time, duration):
+    note.duration = duration
     global max, longest_duration
     if not time in note_time_dict:
         if max <= time:
@@ -62,7 +63,7 @@ for number in range(track_num):
         if time in note_time_dict:
             for item in note_time_dict.get(time):
                 for note_pitch in item.pitch:
-                    MyMIDI.addNote(number, channel, note_pitch, time, duration, volume)
+                    MyMIDI.addNote(number, channel, note_pitch, time, item.duration, volume)
         time += 1
 
 if os.path.exists(f"Track/Track.midi"):

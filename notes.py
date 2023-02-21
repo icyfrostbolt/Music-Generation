@@ -6,6 +6,7 @@ class Chord:
     def __init__(self,notes):
         self.notes = notes
         self.pitch = []
+        self.duration = None
 
 def get_chord_name(name):
     return chords.from_shorthand(name)
