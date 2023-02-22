@@ -4,9 +4,10 @@ import notes, os, parse_inst
 
 channel = 0
 time = 0  # beats
-duration = 1 # beast
+duration = 1 # beats
 tempo = int(input("Tempo? (BPM):"))
 volume = int(input("Volume? (0-127): "))
+instrument = input("What MIDI Instrument? (Name): ")
 max = 0
 longest_duration = 0
 
@@ -55,7 +56,7 @@ for number in range(track_num):
 
     MyMIDI = MIDIFile(track_num)
     MyMIDI.addTempo(number, time, tempo)
-    MyMIDI.addProgramChange(number, channel, 0, inst_dict["Acoustic grand piano"])
+    MyMIDI.addProgramChange(number, channel, 0, inst_dict[instrument])
 
     while True:
         if max+longest_duration <= time:
