@@ -27,15 +27,17 @@ def note_caller():
 
     for chord in chord_names:
         for octave in range(11):
-            chord_dict[chord+str(octave)] = Chord(get_chord_name(chord))
-            for note in chord_dict[chord+str(octave)].notes:
-                chord_dict[chord+str(octave)].pitch.append(note_num_conversion(note, octave))
+            oct = str(octave)
+            chord_dict[chord+oct] = Chord(get_chord_name(chord))
+            for note in chord_dict[chord+oct].notes:
+                chord_dict[chord+oct].pitch.append(note_num_conversion(note, octave))
     return chord_dict
 
 def single_notes(note_names):
     note_pitch = {}
     for note_name in note_names:
         for octave in range(11):
-            note_pitch[note_name+str(octave)] = Chord(note_name)
-            note_pitch[note_name+str(octave)].pitch.append(notes.note_to_int(note_name))
+            oct = str(octave)
+            note_pitch[note_name+oct] = Chord(note_name)
+            note_pitch[note_name+oct].pitch.append(notes.note_to_int(note_name))
     return note_pitch

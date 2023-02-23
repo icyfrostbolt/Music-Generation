@@ -2,14 +2,14 @@ from mingus.containers import Note
 from midiutil import MIDIFile
 import notes, os, parse_inst
 
-channel = 0
+channel = 0 # only 1 channel in this project
 time = 0  # beats
 duration = 1 # beats
-tempo = int(input("Tempo? (BPM):"))
+tempo = int(input("Tempo? (BPM): "))
 volume = int(input("Volume? (0-127): "))
 instrument = input("What MIDI Instrument? (Name): ")
-max = 0
-longest_duration = 0
+max = 0 # helps determine maximum number of beats
+longest_duration = 0 # longest duration of a beat
 
 note_numbers = notes.note_caller()
 inst_dict = parse_inst.get_instrument_codes()
@@ -47,7 +47,7 @@ for number in range(track_num):
     # add the notes to the song
     note_data.append(open_song(os.path.join(directory, f"song{number}.csv")))
     for item in note_data[-1]:
-        add_note_to_dict(note_numbers[item[0]+item[1]],int(item[2]),int(item[3]))
+        add_note_to_dict(note_numbers[item[0]+item[1]], int(item[2]), int(item[3]))
     
     # row 1 = note
     # row 2 = octave
