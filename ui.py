@@ -72,14 +72,11 @@ durationnameentry.place(x=200+xcoord,y=365)
 def mouse_wheel(event):
     global count
     if event.delta == -120:
-        count -= 1 # scroll down
+        pass # scroll down
     if event.delta == 120:
-        count += 1 # scroll up
-    label['text'] = count
+        pass # scroll up
 
 count = 0
 window.bind("<MouseWheel>", mouse_wheel)
-label = tk.Label(window, font=('courier', 18, 'bold'), width=10)
-label.pack(padx=40, pady=40)
 
 window.mainloop()
