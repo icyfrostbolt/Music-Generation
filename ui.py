@@ -134,7 +134,7 @@ for octave in range(10):
                 note_name = "B"
         octave_indicators.append([tk.Label(text=f"{note_name}{octave}",bg="orange",width=2),0,octave*140+note*20])
 
-        
+timeindicator = []
 
 timename = tk.Label(text="Time:")
 timenameentry = tk.Entry()
@@ -149,27 +149,44 @@ durationnameentry.place(x=200,y=365)
 button = tk.Button(text="Add note",width=25,height=0,bg="cyan",command=add_note)
 button.place(x=200,y=200)
 
+green_bar = tk.Label(width=25,height=1,bg="green")
+green_bar.place(x=0,y=180)
+
 # mouse wheel has a counter which coordinates to the synthesizer position
 
 def place():
     global xcoord, ycoord
     for notes in notes_data:
-        if notes.self_y+ycoord > 180:
-            notes.button.place(x=notes.x+xcoord,y=notes.self_y+ycoord+300)
+        if notes.self_y+ycoord > 160:
+            if notes.x+xcoord > 30:
+                notes.button.place(x=notes.x+xcoord-10,y=notes.self_y+ycoord+300)
+            else:
+                notes.button.place(x=notes.x+xcoord+300,y=notes.self_y+ycoord+300)
         else:
-            notes.button.place(x=notes.x+xcoord,y=notes.self_y+ycoord)
+            if notes.x+xcoord > 30:
+                notes.button.place(x=notes.x+xcoord-10,y=notes.self_y+ycoord)
+            else:
+                notes.button.place(x=notes.x+xcoord-300,y=notes.self_y+ycoord)
     for item in octave_indicators:
-        if item[2]+ycoord > 180:
+        if item[2]+ycoord > 160:
             item[0].place(x=item[1],y=item[2]+ycoord+300)
         else:
             item[0].place(x=item[1],y=item[2]+ycoord)
+    result = ((40*xcoord)+400)/40
+    result = int(result)
+    while len(timeindicator) < result + 40:
+        timeindicator.append(tk.Label(text=f"{len(timeindicator)}",bg="green",width="5",anchor="w"))
+    for time in timeindicator:
+        time.place(x=(timeindicator.index(time)*40)+xcoord+30,y=180)
+
 
 def mouse_wheel(event):
     global ycoord
     if event.delta == -120:
         ycoord -= 5
     if event.delta == 120:
-        ycoord += 5
+        if ycoord + 5 <= 0:
+            ycoord += 5
     place()
 
 def key_pressed(event):
@@ -177,7 +194,8 @@ def key_pressed(event):
     if event.keysym == 'Left':
         xcoord -= 5
     if event.keysym == 'Right':
-        xcoord += 5
+        if xcoord + 5 <= 0:
+            xcoord += 5
     place()
 
 place()
