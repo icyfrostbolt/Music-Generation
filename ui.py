@@ -13,7 +13,7 @@ class Note():
         self.button = None
     
     def set_y(self):
-        octave_y = self.octave*140
+        octave_y = (10-self.octave)*140
         note_y = 0
         match self.note:
             case "D":
@@ -75,7 +75,7 @@ window.geometry("400x400")
 window.title("Music Generation")
 
 xcoord = 0
-ycoord = 0
+ycoord = -680
 
 settings = tk.Label(text="General Settings:", background="cyan", width="25")
 settings.place(x=0,y=200)
@@ -114,6 +114,8 @@ octavenameentry = tk.Entry()
 octavename.place(x=200,y=265)
 octavenameentry.place(x=200,y=285)
 
+orange_bar = tk.Label(width=2,height=13,bg="orange")
+orange_bar.place(x=0,y=0)
 octave_indicators = []
 for octave in range(10):
     for note in range(7):
@@ -132,7 +134,7 @@ for octave in range(10):
                 note_name = "A"
             case 6:
                 note_name = "B"
-        octave_indicators.append([tk.Label(text=f"{note_name}{octave}",bg="orange",width=2),0,octave*140+note*20])
+        octave_indicators.append([tk.Label(text=f"{note_name}{octave}",bg="orange",width=2),0,(10-octave)*140+note*20])
 
 timeindicator = []
 
@@ -172,9 +174,9 @@ def place():
             item[0].place(x=item[1],y=item[2]+ycoord+300)
         else:
             item[0].place(x=item[1],y=item[2]+ycoord)
-    result = ((40*xcoord)+400)/40
+    result = ((40*xcoord)+400)/40 # fix this so it does unlimited?
     result = int(result)
-    while len(timeindicator) < result + 40:
+    while len(timeindicator) < result + 50:
         timeindicator.append(tk.Label(text=f"{len(timeindicator)}",bg="green",width="5",anchor="w"))
     for time in timeindicator:
         time.place(x=(timeindicator.index(time)*40)+xcoord+30,y=180)
@@ -183,7 +185,8 @@ def place():
 def mouse_wheel(event):
     global ycoord
     if event.delta == -120:
-        ycoord -= 5
+        if ycoord - 5 >= -1220:
+            ycoord -= 5
     if event.delta == 120:
         if ycoord + 5 <= 0:
             ycoord += 5
