@@ -1,73 +1,58 @@
 from mingus.containers import Note
 from midiutil import MIDIFile
-import notes, os, parse_inst
+import notesfile, os, parse_inst
 
-channel = 0 # only 1 channel in this project
-time = 0  # beats
-duration = 1 # beats
-tempo = int(input("Tempo? (BPM): "))
-volume = int(input("Volume? (0-127): "))
-instrument = input("What MIDI Instrument? (Name): ")
-max = 0 # helps determine maximum number of beats
-longest_duration = 0 # longest duration of a beat
+class Chord:
+    def __init__(self,note,octave,duration):
+        self.note = note
+        self.octave = octave
+        self.pitch = []
+        self.duration = duration
 
-note_numbers = notes.note_caller()
-inst_dict = parse_inst.get_instrument_codes()
+note_time_dict = {}
 
-def add_note_to_dict(note, time, duration):
-    note.duration = duration
-    global max, longest_duration
+def add_note_to_dict(note, time, duration, octave):
+    global longest_duration, max_beats
+    max_beats = 0 # helps determine maximum number of beats
     if not time in note_time_dict:
-        if max <= time:
-            max = time
+        if max_beats <= time:
+            max_beats = time
             longest_duration = duration
-        note_time_dict[time] = [note]
+        note_time_dict[time] = [Chord(note,octave,duration)]
     else:
-        note_time_dict[time].append(note)
+        note_time_dict[time].append(Chord(note,octave,duration))
         if duration >= longest_duration:
             longest_duration = duration
-
-def open_song(name):
-    notes = []
-    song = open(name)
-    song.readline()
-    for data in song:
-        notes.append(data.split(","))
-    return notes
-
-track_num = 0
-directory = os.getcwd()
-directory = os.path.join(directory, "CSV")
-for item in sorted(os.listdir(directory)):
-    track_num += 1
-
-note_data = []
-for number in range(track_num):
-    note_time_dict = {}
-    # add the notes to the song
-    note_data.append(open_song(os.path.join(directory, f"song{number}.csv")))
-    for item in note_data[-1]:
-        add_note_to_dict(note_numbers[item[0]+item[1]], int(item[2]), int(item[3]))
+    return longest_duration
     
-    # row 1 = note
-    # row 2 = octave
-    # row 3 = start time
-    # row 4 = duration
+def export_song(instrument, volume, tempo, export_name, note_data):
+    channel = 0
+    time = 0  # beats
+    longest_duration = 0 # longest duration of a beat
 
-    MyMIDI = MIDIFile(track_num)
-    MyMIDI.addTempo(number, time, tempo)
-    MyMIDI.addProgramChange(number, channel, 0, inst_dict[instrument])
+    note_numbers = notesfile.note_caller()
+    inst_dict = parse_inst.get_instrument_codes()
+
+    # add the notes to the song
+
+    for notes in note_data:
+        temp_long = add_note_to_dict(notes.note, notes.start, notes.length, notes.octave)
+        if temp_long > longest_duration:
+            longest_duration = temp_long
+
+    MyMIDI = MIDIFile(1)
+    MyMIDI.addTempo(0, time, tempo)
+    MyMIDI.addProgramChange(0, channel, 0, inst_dict[instrument])
 
     while True:
-        if max+longest_duration <= time:
+        if max_beats+longest_duration <= time:
             break
         if time in note_time_dict:
             for item in note_time_dict.get(time):
-                for note_pitch in item.pitch:
-                    MyMIDI.addNote(number, channel, note_pitch, time, item.duration, volume)
+                MyMIDI.addNote(0, channel, notesfile.note_num_conversion(item.note, item.octave), time, item.duration, volume)
         time += 1
 
-if os.path.exists(f"Track/Track.midi"):
-    os.remove(f"Track/Track.midi")
-with open(f"Track/Track.midi", "wb") as output_file:
-    MyMIDI.writeFile(output_file)
+    if os.path.exists(f"Track/{export_name}.midi"):
+        os.remove(f"Track/{export_name}.midi")
+    with open(f"Track/{export_name}.midi", "wb") as output_file:
+        MyMIDI.writeFile(output_file)
