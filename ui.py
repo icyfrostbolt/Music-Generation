@@ -4,9 +4,9 @@ import midi, parse_inst
 
 notes_data = []
 inst = "Acoustic grand piano"
-name = "Track"
 vol = 127
 temp = 60
+name_var = "Track"
 
 class Note():
     def __init__(self, note, octave, start, length):
@@ -22,18 +22,18 @@ class Note():
         octave_y = (10-self.octave)*140
         note_y = 0
         match self.note:
+            case "C":
+                note_y = 120
             case "D":
-                note_y = 20
+                note_y = 100
             case "E":
-                note_y = 40
+                note_y = 80
             case "F":
                 note_y = 60
             case "G":
-                note_y = 80
+                note_y = 40
             case "A":
-                note_y = 100
-            case "B":
-                note_y = 120
+                note_y = 20
         self.self_y = octave_y + note_y
     
     def color_choice(self):
@@ -93,8 +93,8 @@ def add_note():
     place()
 
 def export_song():
-    global inst, name, vol, temp, notes_data
-    midi.export_song(inst, vol, temp, name, notes_data)
+    global inst, name_var, vol, temp, notes_data
+    midi.export_song(inst, vol, temp, name_var, notes_data)
 
 window = tk.Tk()
 window.geometry("400x400")
@@ -143,19 +143,19 @@ for octave in range(10):
     for note in range(7):
         match note:
             case 0:
-                note_name = "C"
+                note_name = "B"
             case 1:
-                note_name = "D"
+                note_name = "A"
             case 2:
-                note_name = "E"
+                note_name = "G"
             case 3:
                 note_name = "F"
             case 4:
-                note_name = "G"
+                note_name = "E"
             case 5:
-                note_name = "A"
+                note_name = "D"
             case 6:
-                note_name = "B"
+                note_name = "C"
         octave_indicators.append([tk.Label(text=f"{note_name}{octave}",bg="orange",width=2),0,(10-octave)*140+note*20])
 
 timeindicator = []
