@@ -30,7 +30,7 @@ def note_caller():
             oct = str(octave)
             chord_dict[chord+oct] = Chord(get_chord_name(chord))
             for note in chord_dict[chord+oct].notes:
-                chord_dict[chord+oct].pitch.append(note_num_conversion(note, octave))
+                chord_dict[chord+oct].pitch.append(note)
     return chord_dict
 
 def single_notes(note_names):

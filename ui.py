@@ -1,12 +1,13 @@
 import tkinter as tk
 from tkinter import *
-import midi, parse_inst
+import midi, parse_inst, notesfile
 
 notes_data = []
 inst = "Acoustic grand piano"
 vol = 127
 temp = 60
 name_var = "Track"
+note_numbers = notesfile.note_caller()
 
 class Note():
     def __init__(self, note, octave, start, length):
@@ -75,21 +76,30 @@ def update_settings():
 def add_note():
     global notes_data
     note = notenameentry.get()
-    note_names = ["A","B","C","D","E","F","G","Ab","Bb","Db","Eb","Gb","G#","A#","C#","D#","F#"]
-    if not note in note_names:
-        return
     octave = octavenameentry.get()
     start = timenameentry.get()
     length = durationnameentry.get()
+    note_names = ["A","B","C","D","E","F","G","Ab","Bb","Db","Eb","Gb","G#","A#","C#","D#","F#"]
+    chord_names = ["Amin","Amaj","Bmin","Bmaj","Cmin","Cmaj","Dmin","Dmaj",
+    "Emin","Emaj","Fmin","Fmaj","Gmin","Gmaj","Abmin","Abmaj","Bbmin","Bbmaj",
+    "Dbmin","Dbmaj","Ebmin","Ebmaj","Gbmin","Gbmaj"]
+    if not note in note_names and not note in chord_names:
+        return
+    if note in note_names:
+        notes_data.append(Note(note, int(octave), int(start), int(length)))
+        notes_data[-1].set_y()
+        notes_data[-1].init_button()
+    else:
+        for chord in note_numbers[f"{note}{octave}"].pitch:
+            notes_data.append(Note(chord, int(octave), int(start), int(length)))
+            notes_data[-1].set_y()
+            notes_data[-1].init_button()
     try:
         octave_test = int(octave)
         start_test = int(start)
         length_test = int(length)
     except:
         return
-    notes_data.append(Note(note, int(octave), int(start), int(length)))
-    notes_data[-1].set_y()
-    notes_data[-1].init_button()
     place()
 
 def export_song():
@@ -176,7 +186,7 @@ button.place(x=150,y=200)
 exportbutton = tk.Button(text="Export",width=10,height=2,bg="lime",command=export_song)
 exportbutton.place(x=300,y=275)
 
-green_bar = tk.Label(width=25,height=1,bg="green")
+green_bar = tk.Label(width=60,height=1,bg="green")
 green_bar.place(x=0,y=180)
 
 # mouse wheel has a counter which coordinates to the synthesizer position
@@ -199,9 +209,9 @@ def place():
             item[0].place(x=item[1],y=item[2]+ycoord+300)
         else:
             item[0].place(x=item[1],y=item[2]+ycoord)
-    result = ((40*xcoord)+400)/40
+    result = xcoord+60 #number added is how many bars there are
     result = int(result)
-    while len(timeindicator) < result + 50:
+    while len(timeindicator) < result: # dynamically generated, otherwise it just generates result (9) + 100 = 109
         timeindicator.append(tk.Label(text=f"{len(timeindicator)}",bg="green",width="5",anchor="w"))
     for time in timeindicator:
         time.place(x=(timeindicator.index(time)*40)+xcoord+30,y=180)
@@ -220,10 +230,10 @@ def key_pressed(event):
     global xcoord, ycoord
     match event.keysym:
         case 'Left':
-            xcoord -= 5
+            xcoord -= 10
         case 'Right':
             if xcoord + 5 <= 0:
-                xcoord += 5
+                xcoord += 10
         case 'Up':
             if ycoord + 5 <= 0:
                 ycoord += 5
