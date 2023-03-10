@@ -6,6 +6,7 @@ notes_data = []
 inst = "Acoustic grand piano"
 vol = 127
 temp = 60
+barnum = 60
 name_var = "Track"
 note_numbers = notesfile.note_caller()
 
@@ -102,6 +103,16 @@ def add_note():
         return
     place()
 
+def change_bars():
+    global barnum
+    temp_barnum = barnumentry.get()
+    try:
+        temp_barnum = int(temp_barnum)
+    except:
+        return
+    print(barnum)
+    barnum = temp_barnum
+
 def export_song():
     global inst, name_var, vol, temp, notes_data
     midi.export_song(inst, vol, temp, name_var, notes_data)
@@ -113,7 +124,7 @@ window.title("Music Generation")
 xcoord = 0
 ycoord = -680
 
-settings = tk.Button(text="Update Settings:", background="cyan", width="16",command=update_settings)
+settings = tk.Button(text="Update Settings:", background="#03fc52", width="16",command=update_settings)
 settings.place(x=0,y=200)
 
 volumename = tk.Label(text="Volume:")
@@ -146,8 +157,8 @@ octavenameentry = tk.Entry()
 octavename.place(x=150,y=265)
 octavenameentry.place(x=150,y=285)
 
-orange_bar = tk.Label(width=2,height=13,bg="orange")
-orange_bar.place(x=0,y=0)
+vertical_bar = tk.Label(width=2,height=13,bg="green")
+vertical_bar.place(x=0,y=0)
 octave_indicators = []
 for octave in range(10):
     for note in range(7):
@@ -166,7 +177,7 @@ for octave in range(10):
                 note_name = "D"
             case 6:
                 note_name = "C"
-        octave_indicators.append([tk.Label(text=f"{note_name}{octave}",bg="orange",width=2),0,(10-octave)*140+note*20])
+        octave_indicators.append([tk.Label(text=f"{note_name}{octave}",bg="green",width=2),0,(10-octave)*140+note*20])
 
 timeindicator = []
 
@@ -180,19 +191,24 @@ durationnameentry = tk.Entry()
 durationname.place(x=150,y=345) 
 durationnameentry.place(x=150,y=365)
 
-button = tk.Button(text="Add note",width=16,height=0,bg="cyan",command=add_note)
-button.place(x=150,y=200)
+barnumbutton = tk.Button(text="# Bars",width=10,bg="#03fc52",command=change_bars)
+barnumentry = tk.Entry(width=13)
+barnumbutton.place(x=300,y=200)
+barnumentry.place(x=300,y=235)
 
-exportbutton = tk.Button(text="Export",width=10,height=2,bg="lime",command=export_song)
-exportbutton.place(x=300,y=275)
+button = tk.Button(text="Add note",width=16,height=0,bg="#03fc52",command=add_note)
+button.place(x=150,y=200)
 
 green_bar = tk.Label(width=60,height=1,bg="green")
 green_bar.place(x=0,y=180)
 
+exportbutton = tk.Button(text="Export",width=10,height=2,bg="#2bd639",command=export_song)
+exportbutton.place(x=300,y=300)
+
 # mouse wheel has a counter which coordinates to the synthesizer position
 
 def place():
-    global xcoord, ycoord
+    global xcoord, ycoord, barnum
     for notes in notes_data:
         if notes.self_y+ycoord > 160:
             if notes.x+xcoord > 30:
@@ -209,9 +225,9 @@ def place():
             item[0].place(x=item[1],y=item[2]+ycoord+300)
         else:
             item[0].place(x=item[1],y=item[2]+ycoord)
-    result = xcoord+60 #number added is how many bars there are
+    result = xcoord
     result = int(result)
-    while len(timeindicator) < result: # dynamically generated, otherwise it just generates result (9) + 100 = 109
+    while len(timeindicator) < result+barnum:
         timeindicator.append(tk.Label(text=f"{len(timeindicator)}",bg="green",width="5",anchor="w"))
     for time in timeindicator:
         time.place(x=(timeindicator.index(time)*40)+xcoord+30,y=180)

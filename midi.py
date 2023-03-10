@@ -10,6 +10,7 @@ class Chord:
         self.duration = duration
 
 note_time_dict = {}
+note_numbers = notesfile.note_caller()
 
 def add_note_to_dict(note, time, duration, octave):
     global longest_duration, max_beats
