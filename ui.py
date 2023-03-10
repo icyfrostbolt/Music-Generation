@@ -6,7 +6,6 @@ notes_data = []
 inst = "Acoustic grand piano"
 vol = 127
 temp = 60
-barnum = 60
 name_var = "Track"
 note_numbers = notesfile.note_caller()
 
@@ -103,23 +102,13 @@ def add_note():
         return
     place()
 
-def change_bars():
-    global barnum
-    temp_barnum = barnumentry.get()
-    try:
-        temp_barnum = int(temp_barnum)
-    except:
-        return
-    print(barnum)
-    barnum = temp_barnum
-
 def export_song():
     global inst, name_var, vol, temp, notes_data
     midi.export_song(inst, vol, temp, name_var, notes_data)
 
 window = tk.Tk()
 window.geometry("400x400")
-window.title("Music Generation")
+window.title("Music Generator")
 
 xcoord = 0
 ycoord = -680
@@ -191,11 +180,6 @@ durationnameentry = tk.Entry()
 durationname.place(x=150,y=345) 
 durationnameentry.place(x=150,y=365)
 
-barnumbutton = tk.Button(text="# Bars",width=10,bg="#03fc52",command=change_bars)
-barnumentry = tk.Entry(width=13)
-barnumbutton.place(x=300,y=200)
-barnumentry.place(x=300,y=235)
-
 button = tk.Button(text="Add note",width=16,height=0,bg="#03fc52",command=add_note)
 button.place(x=150,y=200)
 
@@ -203,7 +187,7 @@ green_bar = tk.Label(width=60,height=1,bg="green")
 green_bar.place(x=0,y=180)
 
 exportbutton = tk.Button(text="Export",width=10,height=2,bg="#2bd639",command=export_song)
-exportbutton.place(x=300,y=300)
+exportbutton.place(x=300,y=275)
 
 # mouse wheel has a counter which coordinates to the synthesizer position
 
@@ -227,8 +211,9 @@ def place():
             item[0].place(x=item[1],y=item[2]+ycoord)
     result = xcoord
     result = int(result)
-    while len(timeindicator) < result+barnum:
+    while len(timeindicator) < (result*-1)/10+10:
         timeindicator.append(tk.Label(text=f"{len(timeindicator)}",bg="green",width="5",anchor="w"))
+    
     for time in timeindicator:
         time.place(x=(timeindicator.index(time)*40)+xcoord+30,y=180)
 
